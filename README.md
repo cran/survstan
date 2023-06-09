@@ -4,10 +4,15 @@
 # survstan
 
 <!-- badges: start -->
-<!-- badges: end -->
 
-The aim of the R package survstan is to provide a toolkit for fitting
-survival models using Stan.
+[![R build
+status](https://github.com/fndemarqui/survstan/workflows/R-CMD-check/badge.svg)](https://github.com/fndemarqui/survstan/actions)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/survstan)](https://cran.r-project.org/package=survstan)
+[![Downloads](https://cranlogs.r-pkg.org/badges/survstan)](https://cran.r-project.org/package=survstan)
+[![Total
+Downloads](https://cranlogs.r-pkg.org/badges/grand-total/survstan?color=orange)](https://cran.r-project.org/package=survstan)
+<!-- badges: end --> The aim of the R package survstan is to provide a
+toolkit for fitting survival models using Stan.
 
 The R package survstan can be used to fit right-censored survival data
 under independent censoring. The implemented models allow the fitting of
@@ -38,6 +43,10 @@ $\boldsymbol{\theta}$ be a $k \times 1$ vector of parameters. Then, the
 likelihood function for right-censored survival data under independent
 censoring can be expressed as:
 
+$$
+L(\boldsymbol{\theta}) = \prod_{i=1}^{n}f(t_{i}|\boldsymbol{\theta})^{\delta_{i}}S(t_{i}|\boldsymbol{\theta})^{1-\delta_{i}}.
+$$
+
 The maximum likelihood estimate (MLE) of $\boldsymbol{\theta}$ is
 obtained by directly maximization of $\log(L(\boldsymbol{\theta}))$
 using the `rstan::optimizing()` function. The function
@@ -45,8 +54,16 @@ using the `rstan::optimizing()` function. The function
 $\log(L(\boldsymbol{\theta}))$, needed to obtain the observed Fisher
 information matrix, which is given by:
 
+$$
+        \mathscr{I}(\hat{\boldsymbol{\theta}}) = -\frac{\partial^2}{\partial \boldsymbol{\theta}\boldsymbol{\theta}'} \log L(\boldsymbol{\theta})\mid_{\boldsymbol{\theta}=\hat{\boldsymbol{\theta}}},
+$$
+
 Inferences on $\boldsymbol{\theta}$ are then based on the asymptotic
 properties of the MLE, $\hat{\boldsymbol{\theta}}$, that state that:
+
+$$
+\hat{\boldsymbol{\theta}} \asymp N_{k}(\boldsymbol{\theta}, \mathscr{I}^{-1}(\hat{\boldsymbol{\theta}})).
+$$
 
 ## Baseline Distributions
 
@@ -136,6 +153,7 @@ regression models with the R package survstan:
 - proportional hazards (PH) models;
 - proportional odds (PO) models;
 - accelerated hazard (AH) models.
+- Yang and Prentice (YP) models.
 
 Let $\mathbf{x}$ be a $1\times p$ vector of covariates,
 $\boldsymbol{\beta}$ a $p \times 1$ of regression coefficients, and
@@ -217,3 +235,21 @@ $$ and
 $$f(t|\boldsymbol{\theta}, \mathbf{x}) = h_{0}\left(te^{\mathbf{x}\boldsymbol{\beta}}|\boldsymbol{\theta}\right)\exp\left\{- H_{0}\left(t e^{\mathbf{x}\boldsymbol{\beta}}|\boldsymbol{\theta}\right)e^{-\mathbf{x}\boldsymbol{\beta}}
 \right\}.
 $$
+
+### Yang and Prentice Models
+
+The survival function of the Yang and Prentice (YP) model is given by:
+
+$$S(t|\boldsymbol{\theta},\boldsymbol{\beta}, \boldsymbol{\phi}) = \left[1+\frac{\kappa_{S}}{\kappa_{L}}R_{0}(t|\boldsymbol{\theta})\right]^{-\kappa_{L}}.
+$$
+
+The hazard and the probability density functions are then expressed as:
+
+$$h(t|\boldsymbol{\theta},\boldsymbol{\beta}, \boldsymbol{\phi}) = \frac{\kappa_{S}h_{0}(t|\boldsymbol{\theta})\exp\{H_{0}(t|\boldsymbol{\theta})\}}{\left[1+\frac{\kappa_{S}}{\kappa_{L}}R_{0}(t|\boldsymbol{\theta})\right]}
+$$ and
+
+$$f(t|\boldsymbol{\theta},\boldsymbol{\beta}, \boldsymbol{\phi}) = \kappa_{S}h_{0}(t|\boldsymbol{\theta})\exp\{H_{0}(t|\boldsymbol{\theta})\}\left[1+\frac{\kappa_{S}}{\kappa_{L}}R_{0}(t|\boldsymbol{\theta})\right]^{-(1+\kappa_{L})},
+$$
+
+respectively, where $\kappa_{S} = \exp\{\mathbf{x}\boldsymbol{\beta}\}$
+and $\kappa_{L} = \exp\{\mathbf{x}\boldsymbol{\beta}\}$.
