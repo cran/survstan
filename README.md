@@ -74,6 +74,7 @@ in the R package survstan. Such distributions include:
 - Weibull
 - Lognormal
 - Loglogistic
+- Birnbaum-Saunders (fatigue)
 
 The parametrizations adopted in the package survstan are presented next.
 
@@ -252,4 +253,4 @@ $$f(t|\boldsymbol{\theta},\boldsymbol{\beta}, \boldsymbol{\phi}) = \kappa_{S}h_{
 $$
 
 respectively, where $\kappa_{S} = \exp\{\mathbf{x}\boldsymbol{\beta}\}$
-and $\kappa_{L} = \exp\{\mathbf{x}\boldsymbol{\beta}\}$.
+and $\kappa_{L} = \exp\{\mathbf{x}\boldsymbol{\phi}\}$.
