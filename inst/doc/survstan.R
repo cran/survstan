@@ -1,43 +1,38 @@
-## ---- include = FALSE---------------------------------------------------------
+## ----include = FALSE----------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 
-## ----setup--------------------------------------------------------------------
+## ----setup, message=FALSE-----------------------------------------------------
 library(survstan)
 library(dplyr)
 
 ovarian <- ovarian %>%
   mutate(
-    rx = as.factor(rx)
+    across(c("rx", "resid.ds"), as.factor)
   )
 
-# fitting the model:
-fit <- aftreg(Surv(futime, fustat) ~ rx + age, baseline = "weibull", data = ovarian, init = 0)
+survreg <- survreg(
+  Surv(futime, fustat) ~ ecog.ps + rx, 
+  dist = "weibull", data = ovarian
+)
 
-# investigating the fitted model:
-estimates(fit)
-coef(fit)
-confint(fit)
-summary(fit)
-tidy(fit)
-vcov(fit)
-
-
-# residual plots:
-ggresiduals(fit, type = "coxsnell")
-ggresiduals(fit, type = "martingale")
-ggresiduals(fit, type = "deviance")
+survstan <- aftreg(
+  Surv(futime, fustat) ~ ecog.ps + rx, 
+  dist = "weibull", data = ovarian
+)
 
 
-# Deviance analysis:
-fit1 <- aftreg(Surv(futime, fustat) ~ 1, baseline = "weibull", data = ovarian, init = 0)
-fit2 <- aftreg(Surv(futime, fustat) ~ rx, baseline = "weibull", data = ovarian, init = 0)
-fit3 <- aftreg(Surv(futime, fustat) ~ rx + ecog.ps, baseline = "weibull", data = ovarian, init = 0)
+## -----------------------------------------------------------------------------
+summary(survreg)
+summary(survstan)
 
-anova(fit1, fit2, fit3)
-
-AIC(fit1, fit2, fit3)
-
+## -----------------------------------------------------------------------------
+survstan <- phreg(Surv(futime, fustat) ~ ecog.ps + rx, data = ovarian, dist = "weibull")
+cox <- coxph(
+  Surv(futime, fustat) ~ ecog.ps + rx, data = ovarian
+)
+coef(survstan)
+coef(cox)
 
