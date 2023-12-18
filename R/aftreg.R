@@ -6,7 +6,7 @@
 #' @param formula an object of class "formula" (or one that can be coerced to that class): a symbolic description of the model to be fitted.
 #' @param data data an optional data frame, list or environment (or object coercible by as.data.frame to a data frame) containing the variables in the model. If not found in data, the variables are taken from environment(formula), typically the environment from which function is called.
 #' @param baseline the chosen baseline distribution; options currently available are: exponential, weibull, lognormal, loglogistic and Birnbaum-Saunders (fatigue) distributions.
-#' @param dist alternative way to specify the baseline distribution (for compability with the \code{\link[survival]{survreg}} function); default is NULL.
+#' @param dist alternative way to specify the baseline distribution (for compatibility with the \code{\link[survival]{survreg}} function); default is NULL.
 #' @param init initial values specification (default value is 0); see the detailed documentation for \code{init} in \code{\link[rstan]{optimizing}}.
 #' @param ... further arguments passed to other methods.
 #' @return aftreg returns an object of class "aftreg" containing the fitted model.
@@ -49,13 +49,7 @@ aftreg <- function(formula, data, baseline = "weibull", dist = NULL, init = 0, .
                  terms = mt, mf = mf, baseline = baseline, survreg = "aft",
                  n = n, p = p, tau = tau, labels = labels)
 
-  baseline <- switch(baseline,
-                     "exponential" = 1,
-                     "weibull" = 2,
-                     "lognormal" = 3,
-                     "loglogistic" = 4,
-                     "fatigue" = 5
-  )
+  baseline <- set_baseline(baseline)
 
   stan_data <- list(time=y, event=event, X=X, n=n, p=p,
                     baseline=baseline, survreg = 1, tau = tau)
@@ -80,7 +74,9 @@ aftreg <- function(formula, data, baseline = "weibull", dist = NULL, init = 0, .
                              weibull = -stats::pweibull(nu, shape = pars[p+1], scale = pars[p+2], lower.tail = FALSE, log.p = TRUE),
                              lognormal = -stats::plnorm(nu, meanlog = pars[p+1], sdlog = pars[p+2], lower.tail = FALSE, log.p = TRUE),
                              loglogistic = -actuar::pllogis(nu, shape = pars[p+1], scale = pars[p+2], lower.tail = FALSE, log.p = TRUE),
-                             fatigue = -extraDistr::pfatigue(nu, alpha = pars[p+1], beta = pars[p+2], mu = 0, lower.tail = FALSE, log.p = TRUE)
+                             fatigue = -extraDistr::pfatigue(nu, alpha = pars[p+1], beta = pars[p+2], mu = 0, lower.tail = FALSE, log.p = TRUE),
+                             gamma = -stats::pgamma(nu, shape = pars[p+1], rate = pars[p+2], lower.tail = FALSE, log.p = TRUE),
+                             rayleigh = -extraDistr::prayleigh(nu, sigma = pars[p+1], lower.tail = FALSE, log.p = TRUE)
   )
   output$event <- event
 

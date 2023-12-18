@@ -24,3 +24,13 @@
 # survstan 0.0.4
 
 - The survstan package now requires rstan version 2.26.
+
+
+# survstan 0.0.5
+
+- Inclusion of emmeans method for survstan models.
+- Implementation of gamma and Rayleigh distributions.
+- Implementation of se method for computation of standard errors.
+- Correction of covariance matrix for positive parameters.
+- Application of delta method to avoid negative lower bounds in confidence intervals for positive parameters.
+- Bug correction in the implementation of survival functions.

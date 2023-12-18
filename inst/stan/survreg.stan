@@ -45,8 +45,15 @@ transformed data{
   }else if(baseline == 5){ // Birnbaum–Saunders (fatigue)
     is_alpha = 1;
     is_gamma = 1;
+  }else if(baseline == 6){ // gamma
+    is_alpha = 1;
+    is_gamma = 1;
+  }else if(baseline == 7){ // Rayleigh
+    is_sigma = 1;
   }
 
+
+  //------------------------------------------------------------
   if(survreg == 5){
     is_phi = 1;
   }
@@ -116,26 +123,41 @@ model{
       lpdf[i] = fatigue_lpdf(y[i]|alpha[1], gamma[1]);
       lsurv[i] = fatigue_lccdf(y[i]|alpha[1], gamma[1]);
     }
+  }else if(baseline == 6){ // Gamma
+    for(i in 1:n){
+          lpdf[i] = gamma_lpdf(y[i]|alpha, gamma);
+          lsurv[i] = gamma_lccdf(y[i]|alpha, gamma);
+    }
+  }else if(baseline == 7){ // Rayleigh
+    for(i in 1:n){
+          lpdf[i] = rayleigh_lpdf(y[i]|sigma);
+          lsurv[i] = rayleigh_lccdf(y[i]|sigma);
+    }
   }
 
-  if(survreg ==  1){ //AFT model
-    loglik = loglik_aft(lpdf, lsurv, event, lp, tau);
-  }else if(survreg == 2){ //PH model
-    loglik = loglik_ph(lpdf, lsurv, event, lp, tau);
-  }else if(survreg == 3){ //PO model
-    loglik = loglik_po(lpdf, lsurv, event, lp, tau);
-  }else if(survreg == 4){ //AH model
-    loglik = loglik_ah(lpdf, lsurv, event, lp, tau);
+  if(p == 0){
+    loglik = event .* lpdf + (1-event) .* lsurv;
   }else{
-      if(p>0){
-        lp_long = X*phi;
-        ratio =  exp(X*(beta-phi));
-      }else{
-        lp_long = zeros;
-        ratio = exp(zeros);
-      }
-    loglik = loglik_yp(event, lpdf, lsurv, lp, lp_long, ratio, tau);
+    if(survreg ==  1){ //AFT model
+      loglik = loglik_aft(lpdf, lsurv, event, lp, tau);
+    }else if(survreg == 2){ //PH model
+      loglik = loglik_ph(lpdf, lsurv, event, lp, tau);
+    }else if(survreg == 3){ //PO model
+      loglik = loglik_po(lpdf, lsurv, event, lp, tau);
+    }else if(survreg == 4){ //AH model
+      loglik = loglik_ah(lpdf, lsurv, event, lp, tau);
+    }else{
+        if(p>0){
+          lp_long = X*phi;
+          ratio =  exp(X*(beta-phi));
+        }else{
+          lp_long = zeros;
+          ratio = exp(zeros);
+        }
+      loglik = loglik_yp(event, lpdf, lsurv, lp, lp_long, ratio, tau);
+    }
   }
+
 
   target += sum(loglik);
 

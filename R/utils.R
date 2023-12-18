@@ -1,9 +1,37 @@
 
 
+# add here new baseline distributions
+set_baseline <- function(baseline){
+  baseline <- switch(baseline,
+                     "exponential" = 1,
+                     "weibull" = 2,
+                     "lognormal" = 3,
+                     "loglogistic" = 4,
+                     "fatigue" = 5,
+                     "gamma" = 6,
+                     "rayleigh" = 7
+  )
+  return(baseline)
+}
+
+
+delta_method <- function(estimates, V, pars){
+  labels <- names(estimates)
+  is_positive <- labels %in% pars
+  estimates[!is_positive] <- 1
+  D <- diag(estimates) # paremeters already transformed!!!
+  V <- D%*%V%*%D
+  return(V)
+}
 
 reparametrization <- function(object, survreg, baseline, labels, tau, p, ...){
   estimates <- object$par
-  V <- MASS::ginv(-object$hessian)
+  V <- try(chol2inv(chol(-object$hessian)), TRUE)
+  if(class(V)[1] == "try-error"){
+    V <- MASS::ginv(-object$hessian)
+  }
+  npar <- length(estimates)
+  v <- diag(npar)
 
   if(survreg == "yp"){
     p <- 2*p
@@ -14,39 +42,66 @@ reparametrization <- function(object, survreg, baseline, labels, tau, p, ...){
 
   if(baseline == "exponential"){
     labels <- c(labels, "lambda")
-    estimates[p+1] <- estimates[p+1]/tau
-    v <- diag(p+1)
-    v[p+1, p+1] <- 1/tau
+    names(estimates) <- labels
+    colnames(v) = labels
+    rownames(v) = labels
+    V <- delta_method(estimates, V, "lambda")
+    estimates["lambda"] <- estimates["lambda"]/tau
+    diag(v)["lambda"] <- 1/tau
     V <- v%*%V%*%v
-  }else{
-    if(baseline == "weibull"){
+  }else if(baseline == "weibull"){
       labels <- c(labels, "alpha", "gamma")
-      estimates[p+2] <- estimates[p+2]*tau
-      v <- diag(p+2)
-      #v[p+1, p+1] <- estimates[p+1]
-      v[p+2, p+2] <- tau
+      names(estimates) <- labels
+      colnames(v) = labels
+      rownames(v) = labels
+      V <- delta_method(estimates, V, c("alpha", "gamma"))
+      estimates["gamma"] <- estimates["gamma"]*tau
+      diag(v)["gamma"] <- tau
       V <- v%*%V%*%v
-    }else if(baseline == "lognormal"){
-      labels <- c(labels, "mu", "sigma")
-      estimates[p+1] <- estimates[p+1] + log(tau)
-      v <- diag(p+2)
-    }else if(baseline == "loglogistic"){ # loglogistic
-      labels <- c(labels, "alpha", "gamma")
-      estimates[p+2] <- estimates[p+2]*tau
-      v <- diag(p+2)
-      v[p+2, p+2] <- 1/tau
-      V <- v%*%V%*%v
-    }else if(baseline == "fatigue"){ # fatigue
-      labels <- c(labels, "alpha", "gamma")
-      estimates[p+2] <- estimates[p+2]*tau
-      v <- diag(p+2)
-      v[p+2, p+2] <- 1/tau
-      V <- v%*%V%*%v
-    }
+  }else if(baseline == "lognormal"){
+    labels <- c(labels, "mu", "sigma")
+    names(estimates) <- labels
+    estimates["mu"] <- estimates["mu"] + log(tau)
+    V <- delta_method(estimates, V, "sigma")
+    colnames(V) <- labels
+    rownames(V) <- labels
+  }else if(baseline == "loglogistic"){ # loglogistic
+    labels <- c(labels, "alpha", "gamma")
+    names(estimates) <- labels
+    colnames(v) = labels
+    rownames(v) = labels
+    V <- delta_method(estimates, V, c("alpha", "gamma"))
+    estimates["gamma"] <- estimates["gamma"]*tau
+    diag(v)["gamma"] <- tau
+    V <- v%*%V%*%v
+  }else if(baseline == "fatigue"){ # fatigue
+    labels <- c(labels, "alpha", "gamma")
+    names(estimates) <- labels
+    colnames(v) = labels
+    rownames(v) = labels
+    V <- delta_method(estimates, V, c("alpha", "gamma"))
+    estimates["gamma"] <- estimates["gamma"]*tau
+    diag(v)["gamma"] <- tau
+    V <- v%*%V%*%v
+  }else if(baseline == "gamma"){ # gamma
+    labels <- c(labels, "alpha", "gamma")
+    names(estimates) <- labels
+    colnames(v) = labels
+    rownames(v) = labels
+    V <- delta_method(estimates, V, c("alpha", "gamma"))
+    estimates["gamma"] <- estimates["gamma"]/tau
+    diag(v)["gamma"] <- 1/tau
+    V <- v%*%V%*%v
+  }else if(baseline == "rayleigh"){
+    labels <- c(labels, "sigma")
+    names(estimates) <- labels
+    colnames(v) = labels
+    rownames(v) = labels
+    V <- delta_method(estimates, V, "sigma")
+    estimates["sigma"] <- estimates["sigma"]*tau
+    diag(v)["sigma"] <- tau
+    V <- v%*%V%*%v
   }
-  names(estimates) <- labels
-  rownames(V) <- labels
-  colnames(V) <- labels
   res <- list(estimates=estimates, V=V)
   return(res)
 }
@@ -128,4 +183,4 @@ logLik.survstan <- function(object, ...){
 }
 
 
-survstan_distributions <- c("exponential", "weibull", "lognormal", "loglogistic", "fatigue")
+
