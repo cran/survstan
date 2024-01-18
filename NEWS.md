@@ -34,3 +34,13 @@
 - Correction of covariance matrix for positive parameters.
 - Application of delta method to avoid negative lower bounds in confidence intervals for positive parameters.
 - Bug correction in the implementation of survival functions.
+
+
+# survstan 0.0.6
+
+- update summary output.
+- tidy.survstan method was reimplemented to follow broom stantards, and survstan::tidy() no long masks broom::tidy().
+- cross_time() function now allows for parallel computing. 
+- reparametrization of AH model (see details in https://fndemarqui.github.io/survstan/).
+- implementation of extended hazard (EH) family of survival regression models.
+

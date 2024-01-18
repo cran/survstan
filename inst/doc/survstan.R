@@ -29,7 +29,10 @@ summary(survreg)
 summary(survstan)
 
 ## -----------------------------------------------------------------------------
-survstan <- phreg(Surv(futime, fustat) ~ ecog.ps + rx, data = ovarian, dist = "weibull")
+survstan <- phreg(
+  Surv(futime, fustat) ~ ecog.ps + rx, 
+  data = ovarian, dist = "weibull"
+)
 cox <- coxph(
   Surv(futime, fustat) ~ ecog.ps + rx, data = ovarian
 )

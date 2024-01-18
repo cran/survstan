@@ -346,12 +346,12 @@ the user must choose among one of the available fitting functions
 that is, <code>aft</code> for accelerated failure time (AFT) models,
 <code>ah</code> for accelerates hazards (AH) models, <code>ph</code> for
 proportional hazards (PO) models, <code>po</code> for proportional (PO)
-models, or <code>yp</code> for Yang &amp; Prentice (YP) models).</p>
+models, or <code>yp</code> for Yang &amp; Prentice (YP) models.</p>
 <p>The specification of the survival formula passed to the chosen
 <code>*reg()</code> function follows the same syntax adopted in the
 <strong>survival</strong> package, so that transition to the
 <strong>survstan</strong> package can be smoothly as possible for those
-familiar with the <code>survival</code> package.</p>
+familiar with the <strong>survival</strong> package.</p>
 <p>The code below shows the model fitting of a AFT model with Weibull
 baseline distribution using the <code>survstan::aftreg()</code>
 function. For comparison purposes, we also fit to the same data the
@@ -408,30 +408,33 @@ of the intercept term in the linear predictor.</p>
 <span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a><span class="co">#&gt; Accelerated failure time model fit with weibull baseline distribution </span></span>
 <span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a><span class="co">#&gt; Regression coefficients:</span></span>
-<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a><span class="co">#&gt;         Estimate  StdErr z.value p.value</span></span>
-<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a><span class="co">#&gt; ecog.ps  -0.3851  0.5270 -0.7307  0.4649</span></span>
-<span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a><span class="co">#&gt; rx2       0.5287  0.5292  0.9991  0.3178</span></span>
+<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a><span class="co">#&gt;         Estimate Std. Error z value Pr(&gt;|z|)</span></span>
+<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a><span class="co">#&gt; ecog.ps  -0.3851     0.5270 -0.7307   0.4649</span></span>
+<span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a><span class="co">#&gt; rx2       0.5287     0.5292  0.9991   0.3178</span></span>
 <span id="cb2-30"><a href="#cb2-30" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a><span class="co">#&gt; Baseline parameters:</span></span>
-<span id="cb2-32"><a href="#cb2-32" tabindex="-1"></a><span class="co">#&gt;         estimate         se       2.5%      97.5%</span></span>
-<span id="cb2-33"><a href="#cb2-33" tabindex="-1"></a><span class="co">#&gt; alpha    1.13141    0.52700    0.69014     1.8548</span></span>
-<span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a><span class="co">#&gt; gamma 1678.06655    0.52920  271.78211 10360.9005</span></span>
+<span id="cb2-32"><a href="#cb2-32" tabindex="-1"></a><span class="co">#&gt;         Estimate Std. Error       2.5%      97.5%</span></span>
+<span id="cb2-33"><a href="#cb2-33" tabindex="-1"></a><span class="co">#&gt; alpha    1.13141    0.28535    0.69014     1.8548</span></span>
+<span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a><span class="co">#&gt; gamma 1678.06655 1558.57309  271.78211 10360.9005</span></span>
 <span id="cb2-35"><a href="#cb2-35" tabindex="-1"></a><span class="co">#&gt; --- </span></span>
 <span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a><span class="co">#&gt; loglik = -97.08449   AIC = 202.169</span></span></code></pre></div>
 <p>Next, we show how to fit a PH model using the
 <code>survstan::phreg()</code> function. For comparison purposes, the
 semiparametric Cox model is also fitted to the same data using the
 function <code>survival::coxph()</code>.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>survstan <span class="ot">&lt;-</span> <span class="fu">phreg</span>(<span class="fu">Surv</span>(futime, fustat) <span class="sc">~</span> ecog.ps <span class="sc">+</span> rx, <span class="at">data =</span> ovarian, <span class="at">dist =</span> <span class="st">&quot;weibull&quot;</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>cox <span class="ot">&lt;-</span> <span class="fu">coxph</span>(</span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="fu">Surv</span>(futime, fustat) <span class="sc">~</span> ecog.ps <span class="sc">+</span> rx, <span class="at">data =</span> ovarian</span>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>survstan <span class="ot">&lt;-</span> <span class="fu">phreg</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="fu">Surv</span>(futime, fustat) <span class="sc">~</span> ecog.ps <span class="sc">+</span> rx, </span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="at">data =</span> ovarian, <span class="at">dist =</span> <span class="st">&quot;weibull&quot;</span></span>
 <span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>)</span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="fu">coef</span>(survstan)</span>
-<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt;    ecog.ps        rx2 </span></span>
-<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt;  0.4355449 -0.5981575</span></span>
-<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="fu">coef</span>(cox)</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>cox <span class="ot">&lt;-</span> <span class="fu">coxph</span>(</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>  <span class="fu">Surv</span>(futime, fustat) <span class="sc">~</span> ecog.ps <span class="sc">+</span> rx, <span class="at">data =</span> ovarian</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>)</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="fu">coef</span>(survstan)</span>
 <span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt;    ecog.ps        rx2 </span></span>
-<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt;  0.3697972 -0.5782271</span></span></code></pre></div>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt;  0.4355449 -0.5981575</span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="fu">coef</span>(cox)</span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt;    ecog.ps        rx2 </span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt;  0.3697972 -0.5782271</span></span></code></pre></div>
 <!-- Now we  and the semiparametric proportional hazards model using the `survival::coxph()` -->
 <!-- The usege of other functions implemented in the __survstan__ package are illustrated in the code presented below: -->
 <!-- ```{r} -->
