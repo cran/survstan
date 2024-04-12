@@ -1,7 +1,7 @@
-1715ce9afa47608004899fb374e442a6 *DESCRIPTION
+c6388bca970ea877da3a996c7ee5eb80 *DESCRIPTION
 7c8ab7535a5b4e37e48ca7382af79005 *LICENSE
 f802897df13ba6f72450a113f7059fe3 *NAMESPACE
-11540c7721270c87a10d486d7954e73f *NEWS.md
+f873cae57a50e8b8ffc8fc77c4204792 *NEWS.md
 ea13a42f6753ee2d6e99113a1d06bf45 *R/aftreg.R
 974296a58f13925c0c86851b74a66908 *R/ahreg.R
 59c8234f349aed5858d0cd85bbde0208 *R/aic.R
@@ -23,14 +23,14 @@ cee796d8eb282388e275864299624982 *R/phreg.R
 be2f4f153d68fbc0d7df59e5fba75add *R/residuals.R
 cd2837ee0031c5a85679f08915438347 *R/stanmodels.R
 d49615671631b723b8dc648a7e62e8ee *R/summary.R
-0ffc0dea980a0fe3a99e7628b876ebbb *R/survfit.R
+43b6105fab9924135960b94985d6f845 *R/survfit.R
 1e5af54a9a839518dc8fabe73012a8a6 *R/survstan-package.R
 2d0aa4673357f99520ef5bda1a3249b6 *R/tidy.R
 0872eba1080e8aa1ce8919797f927ff7 *R/utils.R
 c6244251f936acbba99a3cdc8b2834be *R/ypreg.R
 8e34da2f1590eb98d3c4c7f95ee385bd *R/zzz.R
 5becd6acf7c1cc9b0796570442582d3f *README.md
-d2ab6a4a1d514419d64169885437c73e *build/partial.rdb
+24c47964e813d4d07fc4c9e64634db26 *build/partial.rdb
 879aed31e19cf6c0b29694d79c3317ef *build/vignette.rds
 7e297a31e37e77c201a2bacff2f979eb *configure
 5fdedca26c8830d7bb06aa1c4a634204 *configure.win
@@ -79,7 +79,7 @@ d749e850447ef3e2cb1d8e98d7c91319 *man/reexports.Rd
 961330d95b074c0d31586c6b461806ee *man/se.Rd
 6ecf2dde5e179aaa167f2303b6979476 *man/se.survstan.Rd
 d8ce29d3417c08050ade948b7b22c84b *man/summary.survstan.Rd
-de4c9f33fe57eb3a4706b414bda3ed1d *man/survfit.survstan.Rd
+e4c675c14fe39596fcafb6b1a6be08f5 *man/survfit.survstan.Rd
 4478a1f372a596c2be3889dd9ff7aaf0 *man/survstan-package.Rd
 1cc06125d003ebca7ae7aea2214582e8 *man/tidy.survstan.Rd
 b1f79659873afd59014b06fffbaebd9f *man/vcov.survstan.Rd

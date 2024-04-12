@@ -1,6 +1,6 @@
 Package: survstan
 Title: Fitting Survival Regression Models via 'Stan'
-Version: 0.0.7
+Version: 0.0.7.1
 Authors@R: 
     c(
     person(given = "Fabio", family = "Demarqui", role = c("aut", "cre", "cph"), email = "fndemarqui@est.ufmg.br", comment = c(ORCID = "0000-0001-9236-1986")),
@@ -29,10 +29,10 @@ Suggests: emmeans (>= 1.4.2), estimability, GGally, knitr, rmarkdown,
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 NeedsCompilation: yes
-Packaged: 2024-03-20 21:01:26 UTC; fndemarqui
+Packaged: 2024-04-12 16:07:59 UTC; fndemarqui
 Author: Fabio Demarqui [aut, cre, cph]
     (<https://orcid.org/0000-0001-9236-1986>),
   Andrew Johnson [ctb]
 Maintainer: Fabio Demarqui <fndemarqui@est.ufmg.br>
 Repository: CRAN
-Date/Publication: 2024-03-20 23:00:02 UTC
+Date/Publication: 2024-04-12 16:50:02 UTC
